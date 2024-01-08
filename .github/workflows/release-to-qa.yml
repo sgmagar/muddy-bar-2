@@ -19,7 +19,7 @@ jobs:
         id: tag-name
         run: |
           DATE_TAG=$(date +'%y%m%d')
-          PREFIX="qa-test-$DATE_TAG."
+          PREFIX="qa-$DATE_TAG."
           TAGS=$(git tag -l "$PREFIX*" | sort --version-sort | tail -n1)
           if [[ "$TAGS" == "" ]]; then
             NEW_TAG="${PREFIX}1"
