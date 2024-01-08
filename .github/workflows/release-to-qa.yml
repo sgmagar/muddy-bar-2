@@ -1,0 +1,64 @@
+name: Release to QA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tag-and-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Generate tag name
+        id: tag-name
+        run: |
+          DATE_TAG=$(date +'%y%m%d')
+          PREFIX="qa-test-$DATE_TAG."
+          TAGS=$(git tag -l "$PREFIX*" | sort --version-sort | tail -n1)
+          if [[ "$TAGS" == "" ]]; then
+            NEW_TAG="${PREFIX}1"
+          else
+            LAST_NUMBER=$(echo $TAGS | grep -o -E '[0-9]+$')
+            NEXT_NUMBER=$((LAST_NUMBER + 1))
+            NEW_TAG="${PREFIX}${NEXT_NUMBER}"
+          fi
+          echo "TAG_NAME=$NEW_TAG" >> $GITHUB_ENV
+          echo "::set-output name=tag::$NEW_TAG"
+
+      - name: Create and push tag
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag ${{ env.TAG_NAME }}
+          git push origin ${{ env.TAG_NAME }}
+
+      - name: Create Pull Request from Develop to QA
+        id: create-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: "Merge Develop into QA"
+          title: "PR: Develop to QA"
+          body: "This PR merges changes from Develop into QA"
+          base: "qa"
+          head: "develop"
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+      - name: Get PR Number
+        run: echo "PR_NUMBER=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
+
+      - name: Automerge PR
+        if: env.PR_NUMBER != null
+        uses: pascalgn/automerge-action@v0.14.3
+        with:
+          GITHUB_TOKEN: "${{ secrets.GIT_TOKEN }}"
+          pull_request_labels: "automerge"
+          merge_method: "squash"
+          pull_request_number: "${{ env.PR_NUMBER }}"
