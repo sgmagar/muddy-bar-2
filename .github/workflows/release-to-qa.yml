@@ -29,7 +29,6 @@ jobs:
             NEW_TAG="${PREFIX}${NEXT_NUMBER}"
           fi
           echo "TAG_NAME=$NEW_TAG" >> $GITHUB_ENV
-          echo "::set-output name=tag::$NEW_TAG"
 
       - name: Create and push tag
         run: |
@@ -37,6 +36,9 @@ jobs:
           git config user.email github-actions@github.com
           git tag ${{ env.TAG_NAME }}
           git push origin ${{ env.TAG_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
 
       - name: Create Pull Request from Develop to QA
         id: create-pr
