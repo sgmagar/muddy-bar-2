@@ -35,7 +35,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git tag ${{ env.TAG_NAME }}
-          git push https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}/refs/tags/${{ env.TAG_NAME }}
+          git push https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}.git ${{ env.TAG_NAME }}
           # git push origin ${{ env.TAG_NAME }}
         # env:
           # GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
