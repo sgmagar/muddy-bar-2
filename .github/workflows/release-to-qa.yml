@@ -6,9 +6,14 @@ on:
 jobs:
   tag-and-pr:
     runs-on: ubuntu-latest
+    env: 
+      working-directory: ./crowdbotics-slack-app
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      # - name: Checkout repository
+      #   uses: actions/checkout@v2
+      - name: Repo Clone
+        run: |
+          git clone https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Fetch all tags
         run: git fetch --tags
