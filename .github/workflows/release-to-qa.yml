@@ -59,13 +59,13 @@ jobs:
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
       - name: Add Labels to Pull Request
-        if: env.PR_NUMBER != ''
+        if: env.PR_NUMBER != null
         run: |
           LABELS_DATA='{"labels": ["${{ env.pr-label }}"]}'
           curl -s -X POST -H "Authorization: token ${{ secrets.GIT_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${{ github.repository }}/issues/${{ env.PR_NUMBER }}/labels -d "$LABELS_DATA"
       
       - name: Automerge PR
-        if: env.PR_NUMBER != ''
+        if: env.PR_NUMBER != null
         uses: pascalgn/automerge-action@v0.16.2
         env:
           GITHUB_TOKEN: "${{ secrets.GIT_TOKEN }}"
