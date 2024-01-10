@@ -20,7 +20,7 @@ jobs:
       - name: Checkout branch
         working-directory: ${{ env.working-directory }}
         run: |
-            git checkout ${{ env.base-branch }}
+            git checkout ${{ env.pr-branch }}
         
       - name: Fetch all tags
         working-directory: ${{ env.working-directory }}
@@ -52,7 +52,7 @@ jobs:
 
       - name: Create Pull Request from Develop to QA
         id: create-pr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v5
         with:
           commit-message: "Merge Develop into QA"
           title: "PR: Develop to QA"
