@@ -28,8 +28,8 @@ jobs:
           git fetch origin ${{ env.base-branch }}:${{ env.base-branch }}
           DIFF=$(git diff --name-only ${{ env.base-branch }} ${{ env.pr-branch }}) || true
           if [ -z "$DIFF" ]; then
-            echo "No changes detected between branches. Exiting workflow."
-            exit 78
+            echo "No changes detected between branches ${{env.base-branch}} and ${{ env.pr-branch }}. Exiting workflow."
+            exit 1
           fi
         
       - name: Fetch all tags
