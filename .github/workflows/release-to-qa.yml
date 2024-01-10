@@ -55,8 +55,8 @@ jobs:
       - name: Create and push tag
         working-directory: ${{ env.working-directory }}
         run: |
-          git config user.name Saurav Gharti
-          git config user.email sp.gharti@gmail.com
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git tag ${{ env.TAG_NAME }}
           git push origin ${{ env.TAG_NAME }}
 
@@ -65,7 +65,6 @@ jobs:
         run: |
           PR_DATA='{"title":"Merge ${{ env.pr-branch }} into ${{ env.base-branch }}","head":"${{ env.pr-branch }}","base":"${{ env.base-branch }}", "body":"This PR merges changes from ${{ env.pr-branch }} into ${{ env.base-branch }}."}'
           PR_RESPONSE=$(curl -s -X POST -H "Authorization: token ${{ secrets.GIT_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${{ github.repository }}/pulls -d "$PR_DATA")
-          echo "$PR_RESPONSE"
           PR_NUMBER=$(echo $PR_RESPONSE | jq -r '.number')
           echo "Pull Request Number: $PR_NUMBER"
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
