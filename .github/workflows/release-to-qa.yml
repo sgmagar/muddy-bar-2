@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       working-directory: ./muddy-bar-2
+      base-branch: qa
+      pr-branch: develop
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v2
@@ -15,6 +17,11 @@ jobs:
         run: |
           git clone https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}.git
 
+      - name: Checkout branch
+        working-directory: ${{ env.working-directory }}
+        run: |
+            git checkout ${{ env.base-branch }}
+        
       - name: Fetch all tags
         working-directory: ${{ env.working-directory }}
         run: git fetch --tags
@@ -50,8 +57,8 @@ jobs:
           commit-message: "Merge Develop into QA"
           title: "PR: Develop to QA"
           body: "This PR merges changes from Develop into QA"
-          base: "qa"
-          branch: "develop"
+          base: ${{ env.base-branch }}
+          branch: ${{ env.pr-branch }}
           path: ${{ env.working-directory }}
           token: ${{ secrets.GIT_TOKEN }}
 
