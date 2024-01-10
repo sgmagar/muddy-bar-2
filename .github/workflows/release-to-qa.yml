@@ -20,7 +20,7 @@ jobs:
       - name: Checkout branch
         working-directory: ${{ env.working-directory }}
         run: |
-            git checkout ${{ env.pr-branch }}
+            git checkout ${{ env.base-branch }}
         
       - name: Fetch all tags
         working-directory: ${{ env.working-directory }}
