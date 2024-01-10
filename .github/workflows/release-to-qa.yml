@@ -7,7 +7,7 @@ jobs:
   tag-and-pr:
     runs-on: ubuntu-latest
     env: 
-      working-directory: ./crowdbotics-slack-app
+      working-directory: ./muddy-bar-2
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v2
@@ -16,6 +16,7 @@ jobs:
           git clone https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Fetch all tags
+        working-directory: ${{ env.working-directory }}
         run: git fetch --tags
 
       - name: Generate tag name
@@ -34,6 +35,7 @@ jobs:
           echo "TAG_NAME=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Create and push tag
+        working-directory: ${{ env.working-directory }}
         run: |
           git config user.name Saurav Gharti
           git config user.email sp.gharti@gmail.com
