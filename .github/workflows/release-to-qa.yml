@@ -52,6 +52,7 @@ jobs:
           body: "This PR merges changes from Develop into QA"
           base: "qa"
           branch: "develop"
+          path: ${{ env.working-directory }}
           token: ${{ secrets.GIT_TOKEN }}
 
       - name: Get PR Number
