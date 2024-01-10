@@ -40,11 +40,7 @@ jobs:
           git config user.name Saurav Gharti
           git config user.email sp.gharti@gmail.com
           git tag ${{ env.TAG_NAME }}
-          git push https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}.git ${{ env.TAG_NAME }}
-          # git push origin ${{ env.TAG_NAME }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-
+          git push origin ${{ env.TAG_NAME }}
 
       - name: Create Pull Request from Develop to QA
         id: create-pr
@@ -54,10 +50,8 @@ jobs:
           title: "PR: Develop to QA"
           body: "This PR merges changes from Develop into QA"
           base: "qa"
-          head: "develop"
-          draft: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          branch: "develop"
+          token: ${{ secrets.GIT_TOKEN }}
 
       - name: Get PR Number
         run: echo "PR_NUMBER=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
