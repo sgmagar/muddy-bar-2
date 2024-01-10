@@ -23,9 +23,8 @@ jobs:
 
       - name: Check for differences
         id: check-diff
+        working-directory: ${{ env.working-directory }}
         run: |
-          git fetch origin ${{ env.base-branch }}:${{ env.base-branch }}
-          git fetch origin ${{ env.pr-branch }}:${{ env.pr-branch }}
           DIFF=$(git diff --name-only ${{ env.base-branch }} ${{ env.pr-branch }}) || true
           if [ -z "$DIFF" ]; then
             echo "No changes detected between branches. Exiting workflow."
