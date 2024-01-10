@@ -53,13 +53,18 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          PR_DATA='{"title":"Merge ${{ env.pr-branch }} into ${{ env.base-branch }}","head":"${{ env.pr-branch }}","base":"${{ env.base-branch }}", "labels": ["${{ env.pr-label }}"], "body":"This PR merges changes from ${{ env.pr-branch }} into ${{ env.base-branch }}."}'
+          PR_DATA='{"title":"Merge ${{ env.pr-branch }} into ${{ env.base-branch }}","head":"${{ env.pr-branch }}","base":"${{ env.base-branch }}", "body":"This PR merges changes from ${{ env.pr-branch }} into ${{ env.base-branch }}."}'
           PR_RESPONSE=$(curl -s -X POST -H "Authorization: token ${{ secrets.GIT_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${{ github.repository }}/pulls -d "$PR_DATA")
           echo "$PR_RESPONSE"
           PR_NUMBER=$(echo $PR_RESPONSE | jq -r '.number')
           echo "Pull Request Number: $PR_NUMBER"
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
+      - name: Add Labels to Pull Request
+        run: |
+          LABELS_DATA='{"labels": ["${{ env.pr-label }}"]}'
+          curl -s -X POST -H "Authorization: token ${{ secrets.GIT_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${{ github.repository }}/issues/${{ env.PR_NUMBER }}/labels -d "$LABELS_DATA"
+      
       - name: Automerge PR
         if: env.PR_NUMBER != null
         uses: pascalgn/automerge-action@v0.16.2
