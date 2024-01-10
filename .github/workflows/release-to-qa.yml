@@ -21,6 +21,7 @@ jobs:
 
       - name: Generate tag name
         id: tag-name
+        working-directory: ${{ env.working-directory }}
         run: |
           DATE_TAG=$(date +'%y%m%d')
           PREFIX="qa-$DATE_TAG."
