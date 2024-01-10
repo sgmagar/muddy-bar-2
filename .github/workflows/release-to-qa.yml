@@ -9,8 +9,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          ref: develop
 
       - name: Fetch all tags
         run: git fetch --tags
@@ -37,8 +35,8 @@ jobs:
           git tag ${{ env.TAG_NAME }}
           git push https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}.git ${{ env.TAG_NAME }}
           # git push origin ${{ env.TAG_NAME }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 
       - name: Create Pull Request from Develop to QA
