@@ -10,6 +10,7 @@ jobs:
       working-directory: ./muddy-bar-2
       base-branch: qa
       pr-branch: develop
+      pr-label: automerge
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v2
@@ -52,33 +53,17 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          PR_DATA='{"title":"Merge ${{ env.pr-branch }} into ${{ env.base-branch }}","head":"${{ env.pr-branch }}","base":"${{ env.base-branch }}", "labels": ["automerge"], "body":"This PR merges changes from ${{ env.pr-branch }} into ${{ env.base-branch }}."}'
+          PR_DATA='{"title":"Merge ${{ env.pr-branch }} into ${{ env.base-branch }}","head":"${{ env.pr-branch }}","base":"${{ env.base-branch }}", "labels": ["${{ env.pr-label }}"], "body":"This PR merges changes from ${{ env.pr-branch }} into ${{ env.base-branch }}."}'
           PR_RESPONSE=$(curl -s -X POST -H "Authorization: token ${{ secrets.GIT_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${{ github.repository }}/pulls -d "$PR_DATA")
-          echo "PR Response: $PR_RESPONSE"
           PR_NUMBER=$(echo $PR_RESPONSE | jq -r '.number')
           echo "Pull Request Number: $PR_NUMBER"
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
-      
-      # - name: Create Pull Request from Develop to QA
-      #   id: create-pr
-      #   uses: peter-evans/create-pull-request@v5
-      #   with:
-      #     commit-message: "Merge Develop into QA"
-      #     title: "PR: Develop to QA"
-      #     body: "This PR merges changes from Develop into QA"
-      #     base: ${{ env.base-branch }}
-      #     branch: ${{ env.pr-branch }}
-      #     path: ${{ env.working-directory }}
-      #     token: ${{ secrets.GIT_TOKEN }}
-
-      # - name: Get PR Number
-      #   run: echo "PR_NUMBER=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
 
       - name: Automerge PR
         if: env.PR_NUMBER != null
         uses: pascalgn/automerge-action@v0.16.2
         env:
           GITHUB_TOKEN: "${{ secrets.GIT_TOKEN }}"
-          MERGE_LABELS: "automerge"
+          MERGE_LABELS: "${{ env.pr-label }}"
           MERGE_METHOD: "squash"
-          PULL_REQUEST: "${{env.PR_NUMBER}}"
+          PULL_REQUEST: "${{ env.PR_NUMBER }}"
