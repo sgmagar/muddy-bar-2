@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       working-directory: ./muddy-bar-2
-      pr-branch: develop
     steps:
       - name: Repo Clone
         run: |
@@ -20,8 +19,9 @@ jobs:
             git checkout develop
 
       - name: Run Release to QA Workflow
-        uses: crowdbotics/github-actions/create-github-release@master
+        uses: crowdbotics/github-actions/release-to-qa@PLAT-13351
         with:
           working-directory: ${{ env.working-directory }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-          
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
