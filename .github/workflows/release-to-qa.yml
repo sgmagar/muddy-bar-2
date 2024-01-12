@@ -22,7 +22,4 @@ jobs:
         uses: sgmagar/github-actions/release-to-qa@PLAT-13351
         with:
           working-directory: ${{ env.working-directory }}
-          token: ${{ secrets.GIT_TOKEN }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
