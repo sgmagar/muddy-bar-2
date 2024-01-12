@@ -19,8 +19,7 @@ jobs:
             git checkout develop
 
       - name: Run Release to QA Workflow
-        uses: crowdbotics/github-actions/release-to-qa@PLAT-13351
+        uses: sgmagar/github-actions/release-to-qa@PLAT-13351
         with:
-          token: ${{ secrets.GIT_TOKEN }}
           working-directory: ${{ env.working-directory }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
