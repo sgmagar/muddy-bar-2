@@ -22,7 +22,7 @@ jobs:
             git checkout ${{ env.pr-branch }}
 
       - name: Run Release to QA Workflow
-        uses: sgmagar/github-actions/release-to-qa@PLAT-13351
+        uses: sgmagar/github-actions/release-to-qa@master
         with:
           working-directory: ${{ env.working-directory }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
