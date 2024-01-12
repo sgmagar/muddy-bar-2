@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       working-directory: ./muddy-bar-2
+      base-branch: qa
+      pr-branch: develop
+      pr-label: automerge
     steps:
       - name: Repo Clone
         run: |
@@ -16,10 +19,13 @@ jobs:
       - name: Checkout branch
         working-directory: ${{ env.working-directory }}
         run: |
-            git checkout develop
+            git checkout ${{ env.pr-branch }}
 
       - name: Run Release to QA Workflow
         uses: sgmagar/github-actions/release-to-qa@PLAT-13351
         with:
           working-directory: ${{ env.working-directory }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          base-branch: ${{ env.base-branch }}
+          pr-branch: ${{ env.pr-branch }}
+          pr-label: ${{ env.pr-label }}
