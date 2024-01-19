@@ -16,11 +16,9 @@ jobs:
         run: |
           git clone https://${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}.git
 
-      - name: Checkout Reusable Actions Repository
-        uses: actions/checkout@v2
-        with:
-          repository: 'sgmagar/github-actions'
-          path: 'github-actions'
+      - name: Clone Reusable Actions Repository
+        run: |
+          git clone https://${{ secrets.GIT_TOKEN }}@github.com/sgmagar/github-actions.git
 
       - name: Checkout branch
         working-directory: ${{ env.working-directory }}
